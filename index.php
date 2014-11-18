@@ -5,7 +5,7 @@
 		<!--@author Jonathan Torres-->
 		<!--www.jonathantorres.com--> 
 		<!--info@jonathantorres.com-->
-		
+		<link rel="shortcut icon" type="image/png" href="images/favico.ico"/>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="description" content="" />
 		<meta name="author" content="Jonathan Torres" />
@@ -48,6 +48,7 @@
 				<form id="search-form" action="#">
 					<input id="search-text" type="text" placeholder="Search for a Video...">
 					<input id="search-button" type="image" src="images/search_lupe.png" align="top">
+					<a href="search.php">advanced search</a>
 				</form>
 			</div>
 		</section><!-- title-search-container -->
