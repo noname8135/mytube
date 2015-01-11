@@ -1,98 +1,62 @@
-	
-	/*
-	 * Start, Get Most Popular Videos Feed
-	 */
 	function init() {
 		$('#main-videos').empty();
 		$('#thumbs-preloader').hide()
-		
 		//preload
 		.ajaxStart(function(e) {
 			$(this).show();
 		})
-		
-		//when finish, hide!
-		/*.ajaxComplete(function(e) {
-			$(this).css('display', 'none');
-		});*/
-		
-		//parse most popular videos feed
-		//parseVideoFeed('http://gdata.youtube.com/feeds/api/standardfeeds/most_popular?v=2&alt=json');
-		var db = location.search.split('db=')[1];
-		parseVideoFeed('http://140.123.103.188:8135/mytube/query.php?db='+db);
-		//Search for a video
-		$('#search-button').click(function(e) {
-			e.preventDefault();
-			var searchText =$('#search-text').val();
-			location.href="search_results.php";
-			
+
+		parseVideoFeed('query.php?from=index');
+		load_jqcload();
+		$(window).scroll(function() {
+		  var page = 0;
+ 		  if($(window).scrollTop() + $(window).height() == $(document).height()) {
+     	  	parseVideoFeed('query.php?from=index&page_start='+(++page));
+  		 }
 		});
 	}
-	
-	/*
-	 * Display a single video
-	 * Get comments, and related videos
-	 */
-	function displayVideo(id, title) {
-		//update title
-		$('#title-search-container h1').text(title);
+
+	function load_jqcload(){
+		$.getJSON("query.php?from=jqcloud", function(data){
 		
-		//empty container, remove video div, to keep only 1 video visible
-		//remove search result label (if searched for a video previously)
+		var word_list = [
+			{text: "ALL", weight: 500, handlers:{click:function(){show_category('')}}},
+			{text: "Music", weight:data[7]['b']/2, handlers:{click:function(){show_category('music')}}},
+			{text: "People", weight: data[9]['b'], handlers:{click:function(){show_category('peopl')}}},
+			{text: "Games", weight: data[5]['b'], handlers:{click:function(){show_category('games')}}},
+			{text: "Animate", weight: data[0]['b'], handlers:{click:function(){show_category('anima')}}},
+			{text: "Entertainment", weight: data[4]['b'], handlers:{click:function(){show_category('enter')}}},
+			{text: "Comedy", weight: data[2]['b'], handlers:{click:function(){show_category('comed')}}},
+			{text: "Sport", weight: data[11]['b'], handlers:{click:function(){show_category('sport')}}},
+			{text: "Autos", weight: data[1]['b'], handlers:{click:function(){show_category('autos')}}},
+			{text: "Educations", weight: data[3]['b'], handlers:{click:function(){show_category('educa')}}},
+			{text: "Howto", weight: data[6]['b'], handlers:{click:function(){show_category('howto')}}},
+			{text: "Non-profit", weight: data[8]['b'], handlers:{click:function(){show_category('nonpr')}}},
+			{text: "Shows", weight: data[10]['b'], handlers:{click:function(){show_category('shows')}}},
+			{text: "Trail", weight: data[12]['b'], handlers:{click:function(){show_category('trail')}}},
+		];
+		$("#jqcloud_area").jQCloud(word_list, {
+			delayedMode: true, 
+			randomClasses: 3
+		});
+		});
+	}
+	function utf8_to_b64( str ) {
+		return window.btoa(unescape(encodeURIComponent( str )));
+	}
+
+	function show_category(category){
 		$('#main-videos').empty();
-		$('#video-display').remove();
-		$('#results-text').remove();
-		
-		//create video area and comments area
-		var $videoDisplay = $('<section id="video-display" class="container_12"></div>');
-		var $videoArea = $('<div id="video-area" class="grid_8"></div>');
-		var $videoPlaceholder = $('<div id="video-placeholder"></div>');
-		
-		$videoDisplay.insertAfter('#title-search-container');
-		$videoDisplay.append($videoArea);
-		$videoArea.append($videoPlaceholder);
-		
-		//embed player
-		/*swfobject.embedSWF('http://www.youtube.com/e/' + id + '?enablejsapi=1&playerapiid=ytplayer', 
-		'video-placeholder', '620', '375', '9.0.0', null, null, { allowScriptAccess: "always" }, 
-		{ id: "myyoutubeplayer" } );*/
-		
-		//get video comments
-		//parseComments('http://gdata.youtube.com/feeds/api/videos/' + id + '/comments?v=2&alt=json');
-		
-		//get related videos
-		$('#main-videos').append('<div class="grid_12"><h3>Related Videos</h3></div>');
-		parseVideoFeed('http://gdata.youtube.com/feeds/api/videos/' + id + '/related?v=2&alt=json');
+		var url = 'query.php?from=index';
+		if(category)
+			url += '&cat='+category;
+		parseVideoFeed(url);
 	}
-	
-	/*
-	 * Parse comments on a video
-	 
-	function parseComments(feed) {
-		$('#main-comments').tabs();
-		$('#tabs-1').append('<ul id="comments-list"></ul>');
-		
-		$.getJSON(feed, function(data) {
-			if (data['feed']) {
-				$.each(data['feed']['entry'], function(i, entry) {
-					$('#comments-list').append('<li>' + entry.content.$t + '<span>by ' + entry.author[0].name.$t + '</span></li>');
-				});
-			}
-		});
-	}
-	*/
-	/*
-	 * Parses a Video Feed : JSON
-	 */
 	function parseVideoFeed(feed) {
-	
 	/*get data here.....................*/
-		var er = $.getJSON(feed, function(data) {
-			console.log(data);
-			
+		$.getJSON(feed, function(data) {
 				$.each(data, function(i, entry) {
 					//Create video thumbs
-					console.log(entry);
 					var $videoDiv = $('<div></div>').addClass('grid_4 video-thumbnail');
 					$videoDiv.append('<img src="//i.ytimg.com/vi/' + entry.id + '/mqdefault.jpg">');
 					$videoDiv.append('<h5>' + entry.title + '</h5>');
@@ -103,19 +67,14 @@
 					//on thumbnail click
 					$videoDiv.click(
 					function(e) {
-					//	displayVideo(entry.media$group.yt$videoid.$t, entry.title.$t);	
-						location.href="video.php?id="+entry.id;
+						$.get('query.php?from=update&id='+entry.id);	//update view_count
+						var b64_encoded_entry = utf8_to_b64(JSON.stringify(entry));
+						window.open("video.php#"+b64_encoded_entry,"_blank");
 					});
 				});
-			
 		});
-		er.complete(
-			function(){
-				console.log(er);
-			}
-		)
+		
 	}
-	
 /*
  * Start on Document Ready
  */

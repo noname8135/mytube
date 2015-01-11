@@ -1,0 +1,43 @@
+#same_cat{
+	width:330px;
+	height:850px;
+	overflow-y: scroll;
+	margin:-625px 1030px;
+	background-color:#DDDDDD;
+	border-radius: 20px;
+}
+::-webkit-scrollbar { 
+    display: none; 
+}
+.info{
+	font-size: 18px;
+	font-weight: 900;
+}
+#info{
+	border-bottom:#338811 1px dashed;
+}
+.video-thumbnail{
+	margin-top: 10px;
+	margin-bottom:10px;
+
+}
+#main-comments{
+	margin-top:620px;
+}
+#mytubeplayer{
+	margin-left:140px; 
+}
+#info_area{
+	border-radius: 20px;
+	background-color:#DDDDDD;
+	width:780px;
+	height:230px;
+	margin:400px 165px 50px 165px;
+}
+#title-search-container h1{
+	margin-left:150px;
+
+}
+.grid_4{
+	width:277px;
+}

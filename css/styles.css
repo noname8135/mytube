@@ -1,23 +1,30 @@
 /* Global Stuff ------------------------------------------- */
-*, html, body {
-	margin: 0;
-	padding: 0;
-	font-family: 'Times New Roman', Times, serif;
-	color: #333;
-}
+
 h1 { font-size: 28px; }
 h3 { font-size: 22px; }
 a img {height: 58px;}
 /* Header ------------------------------------------- */
 #header { height: 75px; background-color: #000; }
 #header img { padding-top: 15px; }
-
+span{
+	cursor:pointer;
+}
 /* Title Search Container ------------------------------------------- */
 #title-search-container { margin-top: 50px; overflow: hidden; }
 #title-search-container p {	
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	padding-top: 10px;
+}
+#jqcloud_area{
+	margin:auto;
+	width:310px;
+	height:180px;
+}
+#category_select{
+	margin: 0px 0px 0px 1000px;
+	width:100px;
+	height:20px;
 }
 
 /* Search Form ------------------------------------------- */
@@ -35,7 +42,7 @@ a img {height: 58px;}
 #search-form input.error { border-color: #FF0000; }
 
 /* Videos Area ------------------------------------------- */
-#main-videos { margin-top: 35px; overflow: hidden; }
+#main-videos { overflow: hidden; }
 #main-videos h3 { padding-bottom: 20px; }
 #main-videos.container_12 .grid_4 { width: 275px; }
 
@@ -45,7 +52,7 @@ a img {height: 58px;}
 /* Video Comments ------------------------------------------- */
 .comments { height: 375px; font-size: 12px; }
 #tabs-1 { overflow: auto; height: 300px; padding-left: 10px; }
-#comments-list { margin: 0; padding: 0; list-style: none; }
+#comments-list {  padding: 0; list-style: none; height: 1000px; width:950px; margin-top:10px; overflow:scroll;}
 #comments-list li { margin-bottom: 10px; padding-bottom: 10px; border-bottom: solid 1px #CCC; }
 #comments-list li:last-child { border-bottom: none; }
 #comments-list li span { display: block; color: #666; }

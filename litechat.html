@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		
+		<link href="css/reset.css" type="text/css" rel="stylesheet">
+        <link href="css/960.css" type="text/css" rel="stylesheet">
+		<link href="css/styles.css" type="text/css" rel="stylesheet">
+		<link href="css/chatroom.css" type="text/css" rel="stylesheet">
+        <title>Mytube chatroom</title>
+    </head>
+    <body onload="init()">
+		<section id="header">
+			<div class="container_12">
+				<div class="grid_12">
+					<a href="index.php">
+						<img src="images/logo.png">
+					</a>
+					<a href="search.php" id='first_sublogo'>
+						<img src='images/search_lupe.png'>
+					</a>
+					<a href="litechat.html" id='sec_sublogo'>
+						<img src='images/chat.png'>
+					</a>
+	
+				</div>
+			</div>
+		</section>
+    	<div id="content">
+	        <center><h1>Mytube chatroom</h1></center>
+			<br/><br/>
+			<div id="info_area">
+			<label>Username:</label>
+			<input type="text" size="25" title="Enter an username to chat!" name="username" onkeypress="enter_name(event)" autofocus/>&nbsp;
+			<input type="button" name="connect" value="Join">
+			<input type="button" name="disconnect" value="Leave" disabled><br />
+			<label>&nbsp;&nbsp;Message:</label>
+			<input type="text" size="25" id="message" name="message" onkeypress="enter_send(event)" disabled>&nbsp;
+			<input type="button" name="send" value="Send" onclick="MyWebSocket.send();" disabled>
+			</div>
+			<div id="board"></div>
+			
+    	</div>
+		<section id="footer" class="container_12">
+			ssg
+		</section>
+    	<script type="text/javascript">
+		function init(){
+			MyWebSocket.init();
+		}
+		
+		function htmlEntities(str) {
+			return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+		}
+		function enter_name(e){
+			var username = document.getElementsByName('username')[0].value;
+			if(e.charCode == 13)
+				MyWebSocket.connect('lite_chat');
+		}
+		function enter_send(e){
+			if(e.charCode == 13)
+				MyWebSocket.send();
+		}
+		
+		var MyWebSocket = {
+			welcome_flag: 1,
+			ws : null,
+			timer : null,
+			init: function(){
+				var that = this;
+				document.getElementsByName('connect')[0].addEventListener('click', function(e){
+					var resource = 'lite_chat';
+			
+					that.connect(resource);
+				}, false);
+				
+				document.getElementsByName('disconnect')[0].addEventListener('click', function(e){
+					that.close();
+				}, false);
+			},
+	
+			connect : function(resource) {
+				if(this.ws)
+					this.ws.close();
+				
+				this.ws = new WebSocket("wss://140.123.103.188:9998/"+resource);
+				
+				var that = this;
+				
+				this.ws.onopen = function(e) {
+					document.getElementsByName('send')[0].disabled = false;
+					document.getElementsByName('message')[0].disabled = false;
+					document.getElementsByName('disconnect')[0].disabled = false;
+					document.getElementsByName('connect')[0].disabled = true;
+					document.getElementsByName('username')[0].disabled = true;
+					document.getElementById('message').focus();
+				}
+		
+				this.ws.onmessage = function(e) {
+					var nd = document.createElement('div');
+					nd.setAttribute('class', 'messbody');
+					if(that.welcome_flag == 1){
+						nd.innerHTML = decodeURIComponent(e.data);
+						that.welcome_flag = 0;
+					}
+					else 
+						nd.innerHTML = htmlEntities(decodeURIComponent(e.data));
+					document.getElementById('board').insertBefore(nd, document.getElementById('board').firstChild);
+				};
+				this.ws.onclose = function(e) {
+					that.welcome_flag == 1;
+					if(that.timer) {
+						clearInterval(that.timer);
+						that.timer = null;
+					}
+					var nd = document.createElement('div');
+					nd.setAttribute('class', 'messbody');
+					nd.innerHTML = '<br>Disconnected...Bye!';
+					document.getElementById('board').insertBefore(nd, document.getElementById('board').firstChild);
+					document.getElementsByName('send')[0].disabled = true;
+					document.getElementsByName('message')[0].disabled = true;
+					document.getElementsByName('disconnect')[0].disabled = true;
+					document.getElementsByName('connect')[0].disabled = false;
+					document.getElementsByName('username')[0].disabled = false;
+
+				};
+				
+				this.timer = setInterval(function(){
+					that.ws.send('Heartbeat');
+				}, 60000);
+
+			},
+	
+			send: function(){
+				if(!this.ws) return;
+				var message = document.getElementsByName('message')[0].value;
+				if(typeof(message) == 'undefined' || message =='') {
+					return;
+				}
+				var username = document.getElementsByName('username')[0].value;
+				var currentdate = new Date(); 
+					
+					
+				this.ws.send(username+" ("+currentdate.getHours() + ":" + currentdate.getMinutes() +"): " +message);
+				///////////////////////////////////////////////////
+				// 2010/01/08 prevent encodeURLComponent
+				// since websocket is designed to communicate
+				// with utf-8.
+				// text-frame = (%x00) *( UTF8-char ) %xFF
+				//  
+				// http://tools.ietf.org/html/
+				//             draft-hixie-thewebsocketprotocol-68#page-6
+				//
+				// URLencode encodes UTF8-char to ascii character.
+				// for example, 'あ' is encoded to '%E3%81%82'.
+				// in this case, these encoded string consume 9 byetes.
+				// however, 'あ' is 3 bytes in native utf-8 (%xe3%x81%x82).
+				// therefore, sending messages in utf-8 ( don't use
+				// encodeURIComponent ) may be reasonable to keep
+				// network traffic lower and make shortage of messaging
+				// delay.
+				///////////////////////////////////////////////////
+				document.getElementsByName('message')[0].value = '';
+			},
+			
+			close : function() {
+				if(this.ws) {
+					this.ws.close();
+				}
+			}
+		};
+		
+		window.addEventListener('unload', function(e) {
+			MyWebSocket.close();
+		}, false);
+		</script>
+    </body>
+</html>
+

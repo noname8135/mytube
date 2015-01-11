@@ -1,0 +1,38 @@
+*{
+	font-size:12pt;
+}
+#content {
+	width: 700px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top:70px;
+	margin-bottom:70px;
+
+	padding: 10px;
+}
+#info_area{
+	margin-left:80px;
+}
+#board {
+	margin-top:30px;
+	border: 3px solid pink;
+	color: white;
+	background: black;
+	border-radius: 15px;
+	padding: 10px;
+	width: 680px;
+	height: 450px;
+	overflow: auto;
+}
+label {
+	font-size: 12pt;
+	color: #990000;
+}
+input{
+	margin:0px 3px 7px 0px;
+}
+.messbody {
+	font-size: 11pt;
+	color: #66FF0F; 
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}

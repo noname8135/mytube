@@ -2,22 +2,18 @@
 <html>
 	<head>
 		
-		<!--@author Jonathan Torres-->
-		<!--www.jonathantorres.com--> 
-		<!--info@jonathantorres.com-->
 		<link rel="shortcut icon" type="image/png" href="images/favico.ico"/>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta name="description" content="" />
-		<meta name="author" content="Jonathan Torres" />
-		<title>YouTube API Example</title>
+		<meta name="author" content="ShuaI_ChioU"/>
+        <meta name="description" content="hello world" />
 		<script type="text/javascript" src="js/jquery-1.5.2.min.js"></script>
 		<script type="text/javascript" src="js/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
-		<script type="text/javascript" src="js/jquery.ui.tabs.js"></script>
+		<script type="text/javascript" src="js/jqcloud-1.0.4.js"> </script>
 		<script type="text/javascript" src="js/swfobject.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 		
-	
+		<link rel="stylesheet" type="text/css" href="css/jqcloud.css" />
 		<link href="css/jquery.ui.core.css" type="text/css" rel="stylesheet">
 		<link href="css/jquery.ui.theme.css" type="text/css" rel="stylesheet">
 		<link href="css/jquery.ui.tabs.css" type="text/css" rel="stylesheet">
@@ -26,45 +22,34 @@
 		<link href="css/styles.css" type="text/css" rel="stylesheet">
 		
 	</head>
- 
 	<body>
-		
 		<section id="header">
 			<div class="container_12">
 				<div class="grid_12">
-					<a href="index.html">
-						<img src="images/logo.png" border="0">
+					<a href="index.php">
+						<img src="images/logo.png">
+					</a>
+					<a href="search.php" id='first_sublogo'>
+						<img src='images/search_lupe.png'>
+					</a>
+					<a href="litechat.html" id='sec_sublogo'>
+						<img src='images/chat.png'>
 					</a>
 				</div>
 			</div>
-		</section><!-- header -->
-		
-		<section id="title-search-container" class="container_12">
-			<div class="grid_7">
-				<h1>Most Popular Videos</h1>
-			</div>
-			
-			<div class="grid_5">
-				<form id="search-form" action="#">
-					<input id="search-text" type="text" placeholder="Search for a Video...">
-					<input id="search-button" type="image" src="images/search_lupe.png" align="top">
-					<a href="search.php">advanced search</a>
-				</form>
-			</div>
-		</section><!-- title-search-container -->
-		
+		</section>
+		<div id='jqcloud_area'> </div>
+
 		<section id="main-videos" class="container_12">
-			<!-- All Videos here :) -->
-		</section><!-- main-videos -->
+			<!-- All Videos here -->
+		</section>
 		
-		<!-- Preloader of Thumbnails -->
+
 		<div id="thumbs-preloader" class="container_12"></div>
 			
 		<section id="footer" class="container_12">
 			ssg
 		</section>
-		<!-- footer -->
-		
 	</body>
 	
 </html>
